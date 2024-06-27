@@ -1,22 +1,34 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, div, input, text, button, ul, li)
+import Html exposing (Html, div, input, text, button, ul, li, p)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 import Html.Events exposing (onClick)
 import Html.Events exposing (onSubmit)
+import Html exposing (span)
+
+-- todo 
+-- add uuid to each task
+-- add possibility to edit a task
+-- add vite
+-- add tailwind
 
 -- MAIN
 main =
   Browser.sandbox { init = init, update = update, view = view }
 
+type alias Task =
+  {
+    done: Bool,
+    title: String
+  }
 
 -- MODEL
 type alias Model =
   { 
-    tasks : List String,
-    task: String
+    tasks : List Task,
+    task: Task
   }
 
 
@@ -24,7 +36,7 @@ init : Model
 init =
   { 
     tasks = [],
-    task = "" 
+    task = Task False ""
   }
 
 
@@ -38,11 +50,12 @@ update : Msg -> Model -> Model
 update msg model =
   case msg of
     Change newTask ->
-      { model | task = newTask }
+      { model | task = Task False newTask
+      }
     AddTask ->
-      { task = "", tasks = model.task :: model.tasks }
+      { task = Task False "", tasks = model.task :: model.tasks }
     DeleteTask taskToDelete ->
-      { model | tasks = List.filter (\t -> t /= taskToDelete) model.tasks }
+      { model | tasks = List.filter (\t -> t.title /= taskToDelete) model.tasks }
 
 
 -- VIEW
@@ -51,16 +64,19 @@ view model =
   div []
   [
     Html.form [ style "display" "flex", onSubmit AddTask ]
-      [ input [ placeholder "Add a task", value model.task, onInput Change ] [],
+      [ input [ placeholder "Add a task", value model.task.title, onInput Change ] [],
         button [type_ "submit" ] [text "Add"] 
       ]
-    , ul []
+    , ul [style "list-style" "none", style "padding-inline-start" "0"]
       (
         List.map 
           (\t -> li [] 
             [
-              text (t ++ " - "),
-              button [onClick (DeleteTask t)] [text "Delete"]
+              input [type_ "checkbox"] [],
+              span [] [
+                text t.title
+              ],
+              button [style "margin-left" ".5rem", onClick (DeleteTask t.title)] [text "Delete"]
             ]
           )
         model.tasks
