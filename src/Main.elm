@@ -50,8 +50,7 @@ update : Msg -> Model -> Model
 update msg model =
   case msg of
     Change newTask ->
-      { model | task = Task False newTask
-      }
+      { model | task = Task False newTask }
     AddTask ->
       { task = Task False "", tasks = model.task :: model.tasks }
     DeleteTask taskToDelete ->
