@@ -12,6 +12,9 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
     "vite": "^5.3.2",
     "vite-plugin-elm": "^3.0.1"
   },
